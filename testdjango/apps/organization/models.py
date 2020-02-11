@@ -23,6 +23,8 @@ class CourseOrg(models.Model):
     image = models.ImageField(upload_to="org/%Y/%m", verbose_name="logo", max_length=100)
     address = models.CharField(max_length=150, verbose_name="机构地址")
     city = models.ForeignKey(CityDict,verbose_name='所在城市',on_delete=models.CASCADE)
+    students = models.IntegerField(default=0,verbose_name='学习人数')
+    course_nums = models.IntegerField(default=0, verbose_name='课程数')
     add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
 
     class Meta:
@@ -35,6 +37,7 @@ class CourseOrg(models.Model):
 
 class Teacher(models.Model):
     org = models.ForeignKey(CourseOrg,verbose_name='所属机构',on_delete=models.CASCADE)
+    image = models.ImageField(default='',upload_to="teacher/%Y/%m", verbose_name="头像", max_length=100)
     name = models.CharField(max_length=50, verbose_name="教师名称")
     work_years =  models.IntegerField(default=0, verbose_name="工作年限")
     work_company = models.CharField(max_length=50, verbose_name="就职公司")
@@ -47,3 +50,6 @@ class Teacher(models.Model):
     class Meta:
         verbose_name = '教师'
         verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.name

@@ -34,6 +34,10 @@ class CourseOrg(models.Model):
     def __str__(self):
         return self.name
 
+    def get_teacher_nums(self):
+        return self.teacher_set.all().count()
+
+
 
 class Teacher(models.Model):
     org = models.ForeignKey(CourseOrg,verbose_name='所属机构',on_delete=models.CASCADE)
@@ -46,6 +50,7 @@ class Teacher(models.Model):
     click_nums = models.IntegerField(default=0, verbose_name='点击数')
     fav_nums = models.IntegerField(default=0, verbose_name="收藏人数")
     add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
+    age = models.IntegerField(default=18, verbose_name="年龄")
 
     class Meta:
         verbose_name = '教师'

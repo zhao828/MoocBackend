@@ -40,5 +40,6 @@ urlpatterns = [
     #配置上传文件访问处理
     url('^media/(?P<path>.*)$',serve,{'document_root':MEDIA_ROOT}),
     url("^course/", include(('courses.urls','course'), namespace="course")),
+    url("^users/", include(('users.urls', 'users'), namespace="users")),
 
 ]

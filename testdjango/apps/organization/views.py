@@ -7,6 +7,7 @@ from .forms import UserAskForm
 from django.http import HttpResponse
 from courses.models import Course
 from operation.models import *
+from django.db.models import Q
 class AddUserAskView(View):
     def post(self,request):
         userask_form = UserAskForm(request.POST)
@@ -22,6 +23,12 @@ class OrgView(View):
     #课程机构列表功能
     def get(self,request):
         all_orgs = CourseOrg.objects.all()
+
+        search_keywords = request.GET.get('keywords', '')
+        if search_keywords:
+            all_orgs = all_orgs.filter(
+                Q(name__icontains=search_keywords) | Q(desc__icontains=search_keywords) )
+
         all_cities = CityDict.objects.all()
         hot_orgs = all_orgs.order_by('-click_nums')[:3]
 
@@ -156,6 +163,10 @@ class AddFavView(View):
 class TeacherListView(View):
     def get(self,request):
         all_teachers = Teacher.objects.all()
+        search_keywords = request.GET.get('keywords', '')
+        if search_keywords:
+            all_teachers = all_teachers.filter(
+                Q(name__icontains=search_keywords) | Q(work_company__icontains=search_keywords))
         sort = request.GET.get('sort', '')
         if sort:
             if sort == 'hot':
@@ -172,4 +183,23 @@ class TeacherListView(View):
             'sorted_teacher':sorted_teacher,
             'sort': sort,
             'teacher_nums':len(all_teachers)
+        })
+
+class TeacherDetailView(View):
+    def get(self,request,teacher_id):
+        teacher = Teacher.objects.get(id=int(teacher_id))
+        all_courses = Course.objects.filter(teacher=teacher)
+        sorted_teacher = Teacher.objects.all().order_by('-click_nums')[:3]
+        has_teacher_faved = False
+        if UserFavorite.objects.filter(user=request.user,fav_type = 3,fav_id = teacher.id):
+            has_teacher_faved = True
+        has_org_saved = False
+        if UserFavorite.objects.filter(user=request.user,fav_type = 2,fav_id = teacher.org.id):
+            has_org_saved = True
+        return render(request, 'teacher-detail.html', {
+            'teacher':teacher,
+            'all_courses':all_courses,
+            'sorted_teacher': sorted_teacher,
+            "has_teacher_faved":has_teacher_faved,
+            "has_org_saved":has_org_saved
         })

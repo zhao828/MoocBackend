@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}课程机构列表-慕学在线网{% endblock %}
+{% block title %}课程教师列表-慕学在线网{% endblock %}
 {% block custom_bread %}
 <section>
         <div class="wp">
@@ -24,9 +24,25 @@
 			</div>
                 {% for teacher in all_teachers %}
                 <dl class="des">
-
+                    <dt>
+						<a href="{% url 'org:teacher_detail' teacher.id %}">
+                            <div class="picpic">
+                                <img width="100" height="100" class="scrollLoading" src="{{MEDIA_URL}}{{teacher.image}}">
+                            </div>
+                        </a>
+						<div class="btn">
+							<div class="fr btn2 bdsharebuttonbox"
+                                 data-text="授课教师-奥巴马-慕学在线"
+                                 data-desc="我在#慕课网#发现了教师“奥巴马”，对学习中的小伙伴很有帮助，一起来看看吧。"
+                                 data-comment="奥巴马金牌讲师，从业年限：5年"
+                                 >
+                                <span class="fl">分享</span>
+                                <a href="#" class="bds_more" data-cmd="more"></a>
+                            </div>
+						</div>
+					</dt>
 					<dd>
-						<a href="/org/teacher/detail/1/">
+						<a href="{% url 'org:teacher_detail' teacher.id %}">
                             <h1>{{teacher.name}}<span class="key picbig">金牌讲师</span></h1>
                         </a>
 						<ul class="cont">
@@ -37,7 +53,7 @@
 							<li>教学特点：<span>{{teacher.points}}</span></li>
 						</ul>
 					</dd>
-                    <a class="buy buyservice" href="/org/teacher/detail/1/"><br/>查看<br/>详情</a>
+                    <a class="buy buyservice" href="{% url 'org:teacher_detail' teacher.id %}"><br/>查看<br/>详情</a>
                 </dl>
                 {% endfor %}
 
@@ -73,7 +89,7 @@
         {% for teacher in sorted_teacher%}
             <dl class="des">
                 <span class="num fl">1</span>
-                <a href="/diary/hk_detail/6/">
+                <a href="{% url 'org:teacher_detail' teacher.id %}">
                     <dt>
                         <img width="50" height="50" class="scrollLoading"  src="{{MEDIA_URL}}{{teacher.image}}"/>
                     </dt>
@@ -93,5 +109,7 @@
     </div>
 </section>
 {% endblock %}
+{% block custom_js %}
 
+{% endblock %}
 

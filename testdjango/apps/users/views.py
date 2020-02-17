@@ -9,6 +9,7 @@ from .forms import LoginForm,RegisterForm,ForgetForm,ModifyPwdForm
 from django.contrib.auth.hashers import make_password
 from utils.email_send import send_register_email
 from .models import EmailVerifyRecord
+from utils.mixin_utils import LoginRequiredMixin
 
 
 class CustomBackend(ModelBackend):
@@ -150,3 +151,7 @@ def user_login(request):
             return render(request, 'login.html', {'msg':"用户名或密码错误"})
     elif request.method == 'GET':
         return render(request,'login.html',{})
+
+class UserinfoView(LoginRequiredMixin,View):
+    def get(self,request):
+        return render(request,'usercenter-info.html',{})
